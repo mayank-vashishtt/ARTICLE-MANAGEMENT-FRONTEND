@@ -11,8 +11,13 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await registerUser(email, password);
-      navigate('/articles');  // Redirect to the articles page after registration
+      const response = await registerUser(email, password);
+
+      // Assuming token is in response.data.token
+      const token = response.data.token;
+      localStorage.setItem('token', token);  // Store token in localStorage
+
+      navigate('/articles');  // Redirect to the articles page after successful registration
     } catch (error) {
       console.error('Error registering user:', error);
     }
@@ -27,12 +32,14 @@ const RegisterPage = () => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button type="submit">Register</button>
         <p>Already have an account? <a href="/login">Login</a></p>
