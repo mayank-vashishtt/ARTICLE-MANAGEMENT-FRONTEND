@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/api';
-import '../styles/styles.css';  // Import your global or component-specific styles
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -11,10 +10,12 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('e.target ',e.target);
-      console.log(email, password);
-      await loginUser(email, password);
-      navigate('/articles');  // Redirect to the articles page after login
+      const response = await loginUser(email, password);
+
+      const token = response.data.token;
+      localStorage.setItem('token', token);  // Store token in localStorage
+
+      navigate('/articles');  // Redirect to articles page
     } catch (error) {
       console.error('Error logging in:', error);
     }
@@ -29,12 +30,14 @@ const LoginPage = () => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button type="submit">Login</button>
         <p>Don't have an account? <a href="/register">Register</a></p>
