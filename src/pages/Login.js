@@ -11,6 +11,8 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('e.target ',e.target);
+      console.log(email, password);
       await loginUser(email, password);
       navigate('/articles');  // Redirect to the articles page after login
     } catch (error) {
