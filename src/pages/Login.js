@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/api';  // Your login API call
-import jwt_decode from 'jwt-decode';  // To decode the JWT token
+import jwt_decode from 'jwt-decode';  // This is the correct syntax for most cases if jwt_decode is exported as default // To decode the JWT token
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
