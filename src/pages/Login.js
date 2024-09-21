@@ -1,30 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/api';
+import { loginUser } from '../services/api';  // Your login API call
+import jwt_decode from 'jwt-decode';  // To decode the JWT token
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      // Call the API to log the user in
       const response = await loginUser(email, password);
-
+      
+      // Store the token in localStorage
       const token = response.data.token;
-      localStorage.setItem('token', token);  // Store token in localStorage
+      localStorage.setItem('token', token);
 
-      navigate('/articles');  // Redirect to articles page
+      // Decode the JWT token to get the user ID
+      const decodedToken = jwt_decode(token);
+      localStorage.setItem('userId', decodedToken.user.id);  // Store user ID in localStorage
+
+      // Redirect to articles page
+      navigate('/articles');
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error('Login failed', error);
     }
   };
 
   return (
-    <div className="form-container">
+    <div>
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <input
           type="email"
           placeholder="Email"
@@ -40,7 +48,6 @@ const LoginPage = () => {
           required
         />
         <button type="submit">Login</button>
-        <p>Don't have an account? <a href="/register">Register</a></p>
       </form>
     </div>
   );
